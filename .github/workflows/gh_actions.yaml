@@ -1,0 +1,47 @@
+# name: Go_Rest
+# on:
+#   push:
+#     branches:
+#       - "main"
+# env:
+#   GO_VERSION: 1.17.6
+# jobs:
+#   # build workflow
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: set up go ${{env.GO_VERSION}}
+#       uses: actions/setup-go@v1
+#       with:
+#         go-version: ${{env.GO_VERSION}}
+#       id: go
+#     - name: Install dependencies
+#       run: |
+#         go version
+#         go get -u golang.org/x/lint/golint
+#     - name: Check out code into the Go module directory
+#       uses: actions/checkout@v1
+#       with:
+#         fetch-depth: 1
+#     - name: Run build
+#       run: go build .
+#     - name: Run vet & lint
+#       run: |
+#         go vet .
+#         golint .
+#   deploy:
+#     # The type of runner that the job will run on
+#     runs-on: ubuntu-latest
+#     needs: [build] # Only run this workflow when "build" workflow succeeds
+#     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }} # Only run this workflow if it is master branch on push event
+#     steps:
+#     - uses: actions/checkout@v2
+
+#     # Deploy to Docker registry
+#     - name: Deploy to Docker registry
+#       uses: docker/build-push-action@v1
+#       with:
+#         username: ${{ secrets.DOCKER_USERNAME }}
+#         password: ${{ secrets.DOCKER_PASSWORD }}
+#         repository: wilsontanwm/gosimple
+#         tag_with_ref: true

@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres
+    container_name: db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=peoples
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    # ports:
+    #   - 5432:5432
+  rest:
+    image: patroni-test:dev
+    container_name: backend
+    restart: unless-stopped
+    environment:
+      - PG_PASSWORD=password
+      - PG_HOST=db
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
