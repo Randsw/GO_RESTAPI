@@ -83,9 +83,10 @@ func main() {
 	log.SetLevel(log.InfoLevel)
 	//log.SetOutput()
 
-	db := DBparams{"localhost", 5432, "postgres", "password", "peoples"}
-	db.password = os.Getenv("PG_PASSWORD")
-	db.host = os.Getenv("PG_HOST")
+	//db := DBparams{"localhost", 5432, "postgres", "password", "peoples"}
+	db := DBparams{"192.168.0.214", 5000, "admin", "admin", "postgres"}
+	//db.password = os.Getenv("PG_PASSWORD")
+	//db.host = os.Getenv("PG_HOST")
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", db.host, db.port, db.user, db.password, db.dbname)
 	var conn *pgxpool.Pool
 	var err error
