@@ -3,13 +3,13 @@ package main
 import (
 	"github.com/randsw/ha-postgres/records"
 )
+// Records
+type initData [5]records.Record
 
-type InitData [5]records.Record
+var testPeople initData
 
-var TestPeople InitData
-
-func Init() InitData {
-	TestPeople = [5]records.Record{
+func initialize() initData {
+	testPeople = [5]records.Record{
 		{
 			Id:      1,
 			Name:    "Michail",
@@ -46,5 +46,5 @@ func Init() InitData {
 			Email:   "cox@example.com",
 		},
 	}
-	return TestPeople
+	return testPeople
 }

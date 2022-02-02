@@ -3,13 +3,13 @@ module github.com/randsw/ha-postgres
 go 1.17
 
 require (
+	github.com/cenkalti/backoff/v4 v4.1.2
 	github.com/gorilla/mux v1.8.0
 	github.com/jackc/pgx/v4 v4.14.1
 	github.com/sirupsen/logrus v1.8.1
 )
 
 require (
-	github.com/cenkalti/backoff/v4 v4.1.2 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.10.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect

@@ -42,7 +42,7 @@ func initHandlers(pool *pgxpool.Pool) http.Handler {
 	return r
 }
 
-func CreateAndFillTable (p *pgxpool.Pool) error{
+func createAndFillTable (p *pgxpool.Pool) error{
 	_, err := p.Exec(context.Background(),
 		"CREATE TABLE peoples(id SERIAL PRIMARY KEY, name VARCHAR(64), surname VARCHAR(64), gender VARCHAR(64), email VARCHAR(64));")
 	if err != nil {
@@ -50,9 +50,9 @@ func CreateAndFillTable (p *pgxpool.Pool) error{
 			return err
 	}
 	// Create variable with data
-	TestPeople := Init()
+	testPeople := initialize()
 	var id uint64
-	for _, person := range TestPeople{
+	for _, person := range testPeople{
 		row := p.QueryRow(context.Background(),
 			"INSERT INTO peoples (name, surname, gender, email) VALUES ($1, $2, $3, $4) RETURNING id",
 			person.Name, person.Surname, person.Gender, person.Email)
@@ -108,7 +108,7 @@ func main() {
 	err = row.Scan(&id, &Name, &Surname, &Gender, &Email)
 	if err != nil {
 		log.Warnf("Table is empty. Add test data to table")
-		err := CreateAndFillTable(conn)
+		err := createAndFillTable(conn)
 		{
 			if err != nil {
 				log.Errorf("Unable to INSERT test data: %v", err)
