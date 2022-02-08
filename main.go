@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/cenkalti/backoff/v4"
 	"github.com/gorilla/mux"
@@ -75,22 +76,38 @@ func main() {
 	}
 	var id uint64
 	var Name, Surname, Gender, Email string
+	var err error
 
 	customFormatter := new(log.TextFormatter)
 	customFormatter.TimestampFormat = "2006-01-02 15:04:05"
 	customFormatter.FullTimestamp = true
 	log.SetFormatter(customFormatter)
 	log.SetLevel(log.InfoLevel)
-	//log.SetOutput()
+	log.SetOutput(os.Stdout)
 
-	//db := DBparams{"localhost", 5432, "postgres", "password", "peoples"}
 	db := DBparams{"192.168.0.214", 5000, "admin", "admin", "postgres"}
-	//db.password = os.Getenv("PG_PASSWORD")
-	//db.host = os.Getenv("PG_HOST")
+	if value, ok := os.LookupEnv("PG_PASSWORD"); ok {
+        db.password = value
+    } 
+	if value, ok := os.LookupEnv("PG_HOST"); ok {
+        db.host = value
+    }
+	if value, ok := os.LookupEnv("PG_USER"); ok {
+        db.user = value
+    }
+	if value, ok := os.LookupEnv("PG_DBNAME"); ok {
+        db.dbname = value
+    }
+	if value, ok := os.LookupEnv("PG_PORT"); ok {
+        db.port, err = strconv.Atoi(value)
+		if err != nil {
+			// handle error
+			log.Errorf("PG port number not valid: %v\n", err)
+			os.Exit(2)
+		}
+    }
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", db.host, db.port, db.user, db.password, db.dbname)
 	var conn *pgxpool.Pool
-	var err error
-	//conn, err := pgx.Connect(context.Background(), psqlconn)
 	operation := func() error {
 		conn, err = pgxpool.Connect(context.Background(), psqlconn)
 		if err != nil {
